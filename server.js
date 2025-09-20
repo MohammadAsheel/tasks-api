@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Path to tasks.json
 const tasksFile = path.join(__dirname, "data", "tasks.json");
 
 // Middleware
@@ -27,7 +28,12 @@ function writeTasks(tasks) {
   fs.writeFileSync(tasksFile, JSON.stringify(tasks, null, 2));
 }
 
-// ------------------ Task 1: Create New Task (POST) ------------------
+// ✅ Root route to avoid "Cannot GET /"
+app.get("/", (req, res) => {
+  res.send("🚀 Task API is running. Use /api/tasks to interact.");
+});
+
+// ✅ Create New Task (POST)
 app.post("/api/tasks", (req, res) => {
   const { title, description, priority } = req.body;
 
@@ -57,7 +63,7 @@ app.post("/api/tasks", (req, res) => {
   res.status(201).json(newTask);
 });
 
-// ------------------ Task 2: Get All Tasks (GET) ------------------
+// ✅ Get All Tasks (GET)
 app.get("/api/tasks", (req, res) => {
   try {
     const tasks = readTasks();
@@ -67,7 +73,9 @@ app.get("/api/tasks", (req, res) => {
   }
 });
 
-// ------------------ Start Server ------------------
+// ✅ Optional: Serve static frontend (uncomment if needed)
+// app.use(express.static(path.join(__dirname, "public")));
+
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
